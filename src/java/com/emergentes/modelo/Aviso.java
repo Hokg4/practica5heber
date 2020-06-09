@@ -10,5 +10,38 @@ package com.emergentes.modelo;
  * @author usuario
  */
 public class Aviso {
+     private int id;
+    private String descripcion;
+    private int stock;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public int getStock() {
+        return stock;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
+    }
+
     
+
+    @Override
+    public String toString() {
+         return "Aviso{" + "id=" + id + ", decripcion=" + descripcion + ", stock=" + stock + '}';
+    }
 }

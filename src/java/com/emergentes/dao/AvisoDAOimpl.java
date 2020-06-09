@@ -1,88 +1,108 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.emergentes.dao;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import com.emergentes.modelo.Aviso;
+import com.emergentes.utiles.ConexionBD;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- *
- * @author usuario
- */
-@WebServlet(name = "AvisoDAOimpl", urlPatterns = {"/AvisoDAOimpl"})
-public class AvisoDAOimpl extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet AvisoDAOimpl</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet AvisoDAOimpl at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+public class AvisoDAOimpl extends ConexionBD implements AvisoDAO{
+
+    @Override
+    public void insert(Aviso aviso) throws Exception {
+        
+        try {
+        this.conectar();
+        PreparedStatement ps = this.conn.prepareStatement("INSERT into productos (descripcion,stock) values (?, ?)");
+        ps.setString(1, aviso.getDescripcion());
+        ps.setInt(2, aviso.getStock());
+        ps.executeUpdate();
+        }catch(Exception e){
+            throw e;
+        }finally{
+            this.desconectar();
+        }
+        
+    }
+
+    @Override
+    public void update(Aviso aviso) throws Exception {
+        try{
+            this.conectar();
+            PreparedStatement ps = this.conn.prepareStatement("UPDATE productos set descripcion = ?, stock = ? WHERE id = ?");
+            ps.setString(1, aviso.getDescripcion());
+            ps.setInt(2, aviso.getStock());
+            ps.setInt(3, aviso.getId());
+            ps.executeUpdate();
+        }catch(Exception e){
+            throw e;
+        }finally{
+            this.desconectar();
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
+    public void delete(int id) throws Exception {
+        try{
+            this.conectar();
+            PreparedStatement ps = this.conn.prepareStatement("DELETE FROM productos where id = ?");
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        }catch(Exception e){
+            throw e;
+        }finally{
+            this.desconectar();
+        }
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
+    public Aviso getById(int id) throws Exception {
+        Aviso avi = new Aviso();
+       
+        try{
+            this.conectar();
+            PreparedStatement ps = this.conn.prepareStatement("SELECT * FROM productos where id = ?");
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()){
+                avi.setId(rs.getInt("id"));
+                avi.setDescripcion(rs.getString("descripcion"));
+                avi.setStock(rs.getInt("stock"));
+            }
+        }catch(Exception e){
+            throw e;
+        }finally{
+            this.desconectar();
+        }
+        return avi;    
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
     @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
+    public List<Aviso> getAll() throws Exception {
+        List<Aviso> lista = null;
+        try{
+            this.conectar();
+            PreparedStatement ps = this.conn.prepareStatement("SELECT * FROM productos");
+            ResultSet rs = ps.executeQuery();
+            
+            lista = new ArrayList<Aviso>();
+            while(rs.next()){
+                Aviso avi = new Aviso();
+                avi.setId(rs.getInt("id"));
+                avi.setDescripcion(rs.getString("descripcion"));
+                avi.setStock(rs.getInt("stock"));
+                lista.add(avi);
+            }
+            rs.close();
+            ps.close();
+        }catch(Exception e){
+            throw e;
+        } finally{
+            this.desconectar();
+        }
+        return lista;
+    }
 
 }

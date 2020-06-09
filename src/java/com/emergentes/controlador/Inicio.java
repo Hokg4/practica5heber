@@ -5,8 +5,14 @@
  */
 package com.emergentes.controlador;
 
+import com.emergentes.dao.AvisoDAO;
+import com.emergentes.dao.AvisoDAOimpl;
+import com.emergentes.modelo.Aviso;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -20,69 +26,27 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "Inicio", urlPatterns = {"/Inicio"})
 public class Inicio extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet Inicio</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet Inicio at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-    }
-
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
+@Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
-
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
+    throws ServletException, IOException {
+        try {
+            AvisoDAO dao = new AvisoDAOimpl();
+            int id;
+            Aviso avi = new Aviso();
+            
+            String action = (request.getParameter("action") != null) ? request.getParameter("action") : "view";
+            
+            switch(action){
+                case "view":
+                    List<Aviso> lista = dao.getAll();
+                    request.setAttribute("avisos", lista);
+                    request.getRequestDispatcher("index.jsp").forward(request, response);
+                    break;
+                default:
+                    break;
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    } 
 }
