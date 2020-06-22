@@ -10,22 +10,25 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta charset="utf-8">
+        <link rel="stylesheet" href="css\tabla_1.css">
         <title>JSP Page</title>
     </head>
     <body>
            <jsp:include page="Enlace.jsp">
             <jsp:param name="opcion" value="inicio" />
         </jsp:include>
-        <div class="container">
+        <div id="main-container">
             <h1>Productos</h1>
              
-        <table border="1">
+        <table>
+            <thead>
                   <tr>
                     <th>Id</th>
                     <th>Descripcion</th>
                     <th>Stock</th>
                    
                    </tr>
+            </thead>
             <c:forEach var="item" items="${avisos}">
                                 <tr>
                            <td>${item.id}</td>

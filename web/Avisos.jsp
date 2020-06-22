@@ -9,13 +9,16 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" href="css\tabla.css">
         <title>JSP Page</title>
     </head>
     <body>
-         <div class="container">
+         
             <h2>Productos</h2>
             <p><a href="AvisoController?action=add" >Nuevo</a></p>
-            <table border="1">
+            <div id="main-container">
+            <table>
+                <thead>
                 <tr>
                     <th>Id</th>
                     <th>Descripcion</th>
@@ -23,6 +26,7 @@
                     <th>Editar</th>
                     <th>Eliminar</th>
                 </tr>
+                </thead>
                 <c:forEach var="item" items="${avisos}">
                     <tr>
                         <td>${item.id}</td>

@@ -9,6 +9,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" href="css\forml.css">
         <title>JSP Page</title>
     </head>
     <body>
@@ -18,18 +19,16 @@
                 </h1>
                 <form action="AvisoController" method="post">
                     <input type="hidden" name="id" value="${aviso.id}" />
-                
-                <div class>
-                    <label>Descripcion:</label>
-                    <input type="text" name="descripcion" value="${aviso.descripcion}">
+                   <h2 class="form__titulo">Ingrese Nuevo Producto</h2>
+		<div class="contenedor-inputs">
+
+			<input type="text" name="descripcion" placeholder="Descripcion" class="input-48" required value="${aviso.descripcion}">
+			
+			<input type="text" name="stock" placeholder="Stock"value="${aviso.stock}" class="input-100" required>
+			
+			<input type="submit" value="Enviar" class="btn-enviar">
+		
                 </div>
-                <br>
-                <div class>
-                    <label>Stock:</label>
-                     <input type="text" name="stock" value="${aviso.stock}" >
-                </div>
-                <br>
-                <input type="submit" value="Enviar">
             </form>
         </div>
     </body>
